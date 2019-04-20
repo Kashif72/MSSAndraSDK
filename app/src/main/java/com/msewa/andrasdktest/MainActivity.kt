@@ -18,10 +18,7 @@ import com.msewa.vpqlib.model.merchant.Merchant
 import com.msewa.vpqlib.model.merchant.PayQwikInit
 import com.msewa.vpqlib.model.services.mobiletopup.mtpayment.MTPrePaymentRequest
 import com.msewa.vpqlib.model.services.mobiletopup.mtpayment.MTPrePaymentResponse
-import com.msewa.vpqlib.util.CheckOutGateway
-import com.msewa.vpqlib.util.MerchantGateway
-import com.msewa.vpqlib.util.VPQPayGatewayApi
-import com.msewa.vpqlib.util.VPQStatusGatewayApi
+import com.msewa.vpqlib.util.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -47,11 +44,13 @@ class MainActivity : AppCompatActivity(), VPQPayGatewayApi, VPQStatusGatewayApi 
         }
 
 
-        //*****UNCOMMENT AND USE THIS****//
-        //TO CHECK THE STATUS//
 
-//        val api = StatusGateway("REFID12345",this@MainActivity);
-//        api.begin();
+        //*****UNCOMMENT AND USE THIS****//
+//        TO CHECK THE STATUS//
+        //Params : RefIdReceivedFromVPQSDK, RefIdOfAndraBank, Context
+        val api = StatusGateway("REFID12345","12121212", this@MainActivity);
+        api.begin();
+
 
     }
 
@@ -65,6 +64,9 @@ class MainActivity : AppCompatActivity(), VPQPayGatewayApi, VPQStatusGatewayApi 
 
             //ADD THIS FUNCTION AFTER YOU CHECK THE MPIN AND DEDCUT THE BALANCE AND HAVE REFERENCE NUMBER
             //Show loading dialog while calling this and listen to the callback
+
+            //** ADD ANDRA REF HERE**//
+            request.setAndhraBankRefNo("12134124214124")
             val api = CheckOutGateway(GiftCheckOutInit(request, this@MainActivity),this@MainActivity);
             api.payGift();
 
@@ -83,6 +85,10 @@ class MainActivity : AppCompatActivity(), VPQPayGatewayApi, VPQStatusGatewayApi 
 
             //ADD THIS FUNCTION AFTER YOU CHECK THE MPIN AND DEDCUT THE BALANCE AND HAVE REFERENCE NUMBER
             //Show loading dialog while calling this and listen to the callback
+
+
+            //** ADD ANDRA REF HERE**//
+            request.setAndhraBankRefNo("12134124214124")
             val api = CheckOutGateway(CheckOutInit(request, this@MainActivity),this@MainActivity);
             api.pay();
 
@@ -115,6 +121,7 @@ class MainActivity : AppCompatActivity(), VPQPayGatewayApi, VPQStatusGatewayApi 
     //**************** PAYMENT CALLBACKS********************//
 
     override fun onPaySuccess(mtPrePaymentResponse: MTPrePaymentResponse?) {
+        Log.i("ReceivedAndraRef",mtPrePaymentResponse!!.andhraBankRefNo)
         Toast.makeText(this@MainActivity,"PaySuccess, RefID"+ mtPrePaymentResponse!!.referenceNo, Toast.LENGTH_SHORT).show()
 
     }
